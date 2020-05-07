@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+    {% block title %}
+        <title>Hello, homepage!</title>
+    {% endblock %}
+  </head>
+  <body style="margin-bottom: 5%">
+    <nav class="navbar navbar-expand-lg nnavbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li><a class="btn btn-outline-success my-2 my-sm-0" href="../../homepage/" tabindex="-1" aria-disabled="true" onclick="document.cookie='currentsloi=sloi-1'">Главная</a></li>
+    </ul>
+          <form action="{% url 'search:search' %}" class="navbar-form navbar-left searchform" method="get">
+        <div class="input-group">
+            <input id="search" name="iteam" type="text" class="form-control" placeholder="Поиск (чувствителен к регистру)">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0 ml-2">Поиск</button>
+            </span>
+        </div>
+    </form>
+    <form class="form-inline my-2 my-lg-0" method="get">
+
+        {% if username %}
+        <li><a class="btn btn-outline-success my-2 my-sm-0" href="../../logout/" tabindex="-1" aria-disabled="true">Выйти ({{ username }})</a></li>
+    </form>
+  </div>
+</nav>
+{% block body %}
+    <div class="container">
+        {% if results %}
+        <table id="equip_table" class="table border" style="margin-top: 50px" >
+        <tr class=''>
+            <td>id</td>
+            <td>Наименование</td>
+            <td>serial_id</td>
+            <td>Кабинет</td>
+            <td>Этаж</td>
+            <td>Корпус</td>
+            <td>Кол-во</td>
+            {% if username == 'admin' %}
+            <td></td>
+            <td></td>
+            {% endif %}
+        </tr>
+        {% for equip in results %}
+            <tr class='success'>
+                <form method="POST">
+                    {% csrf_token %}
+                    <td>
+                        {{ equip.id }}
+                        <input type="hidden" value="{{ equip.id }}" id="id" name="id">
+                    </td>
+
+                    <td>
+                        <div id="edit_repl">
+                            {{ equip.equip_name }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="text" value="{{ equip.equip_name }}" id="equip_name" name="equip_name">
+                        </div>
+                    </td>
+                    <td>
+                        <div id="edit_repl">
+                            {{ equip.serial_id }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="text" value="{{ equip.serial_id }}" id="serial_id" name="serial_id">
+                        </div>
+                    </td>
+                    <td>
+                        <div id="edit_repl">
+                            {{ equip.room }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="text" value="{{ equip.room }}" id="room" name="room">
+                        </div>
+                    </td>
+                    <td>
+                        <div id="edit_repl">
+                            {{ equip.floor }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="text" value="{{ equip.floor }}" id="floor" name="floor">
+                        </div>
+                    </td>
+                    <td>
+                        <div id="edit_repl">
+                            {{ equip.building }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <select  id="building" name="building" class="form-control" required>
+                                <option value="Лабораторный" {% if equip.building == "Лабораторный" %} selected {% endif %}>Лабораторный</option>
+                                <option value="Хозяйственный" {% if equip.building == "Хозяйственный" %} selected {% endif %}>Хозяйственный</option>
+                                <option value="Флексим" {% if equip.building == "Флексим" %} selected {% endif %}>Корпус Флекса</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div  id="edit_repl">
+                            {{ equip.quantity }}
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="text" value="{{ equip.quantity }}" id="quantity" name="quantity">
+                        </div>
+                    </td>
+                    {% if username == "admin" %}
+                    <td>
+                        <input type="hidden" id="edit" name="edit" value="true">
+                        <input type="hidden" id="addnew" name="addnew" value="false">
+                        <input type="hidden" id="delete" name="delete" value="false">
+                        <div id="edit_repl">
+                            <input type="button" value="Edit" onclick="editrow('{{ equip.id }}')">
+                        </div>
+                        <div id="edit_field" style="display: none">
+                            <input type="submit" value="Submit" id="edit_field">
+                        </div>
+                    </td>
+                    <input type="hidden" value="{{ q }}" id="query" name="query">
+                </form>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ q }}" id="query" name="query">
+                    <td>
+                        <input type="hidden" id="edit" name="edit" value="false">
+                        <input type="hidden" id="addnew" name="addnew" value="false">
+                        <input type="hidden" id="delete" name="delete" value="true">
+                        <input type="hidden" value="{{ equip.id }}" id="id" name="id">
+                        <input type="submit" VALUE="Delete">
+                    </td>
+                </form>
+                    {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+          {% else %}
+        <li><a class="btn btn-outline-success my-2 my-sm-0" href="/" tabindex="-1" aria-disabled="true">Войти</a></li>
+        {% endif %}
+  </body>
+<script type="text/javascript">
+{% if username == "admin" %}
+        function editrow(id) {
+        let table, tr, td, i, txtValue, div, input;
+        console.log(document.getElementById("addnew"));
+        console.log(document.getElementById("edit"));
+        table = document.getElementById("equip_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            if (td[0].innerText == id) {
+                for (let y = 0; y < td.length;y++){
+                    for (let z = 0; z < td[y].getElementsByTagName("div").length; z++){
+                        let cell = td[y].getElementsByTagName("div")[z];
+                        if (cell.id == "edit_repl"){
+                            cell.style.display="none";
+                        }
+                        if (cell.id == "edit_field"){
+                            cell.style.display="";
+                        }
+                    }
+                }
+            }
+        }
+    }
+{% endif %}
+</script>
+</html>

@@ -1,0 +1,63 @@
+.scaling-svg-container {
+ position: relative;
+ height: 1px;
+ width: 100%;
+ padding: 0;
+ /*padding-bottom: 100%;*/
+ /* override this inline for aspect ratio other than square */
+}
+.scaling-svg {
+ position: absolute;
+ height: 100%;
+ width: 100%;
+ left: 0;
+ top: 0;
+}
+
+.scheme {
+	height: 393px;
+	width: 738px;
+	margin: 0 auto;
+	position: relative;
+}
+.scheme svg {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 393px;
+	width: 738px;
+}
+.scheme polygon {
+	fill: #FFDBA4;
+	cursor: pointer;
+}
+
+.container {
+    margin: 1% auto auto;
+   max-width: 70%;
+
+}
+
+#mainsloi-sohr{
+    max-width: 80%;
+    margin: 2% auto auto;
+}
+
+#mainsloi-sohr * {
+    margin: auto;
+}
+
+.searchform{
+    width: 70%;
+    margin: auto;
+}
+
+#divtable{
+    max-width: 70%;
+}
+
+.mainbuilding {
+    width: 40%;
+}
+polygon{opacity:0.0;}
+polygon:hover{opacity:0.5;}
