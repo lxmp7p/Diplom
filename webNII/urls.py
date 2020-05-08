@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('loginsys.urls')),
     path('authors/', include('authors.urls')),
     path('search/', include('search.urls')),
+    path('keymanager/',  include('keymanager.urls')),
 ]
