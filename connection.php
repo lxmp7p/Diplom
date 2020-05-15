@@ -24,7 +24,7 @@ include "sessiontest.php";
 	<meta name="twitter:card" content="" />
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
-	
+
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="css/animate.css">
 	<!-- Icomoon Icon Fonts-->
@@ -42,7 +42,8 @@ include "sessiontest.php";
 	<!--[if lt IE 9]>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
-
+	<script src="main.js"></script>
+	<script src="jquery.maskedinput.js"></script>
 	</head>
 	<body>
 
@@ -66,55 +67,23 @@ include "sessiontest.php";
 		<div class="dt js-dt">
 			<div class="dtc js-dtc">
  <h1>Управление подключением</h1>
- <?php 
- $filename = 'WebManagement\manage.py runserver' 
- ?>
+
  <hr>
- <h2>Статус сервиса</h2>
-<form  class='mysubform' method="GET"  name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
-	<input type="text" class="firstname"  placeholder="IP АДРЕС" name="ip" id="ip"/> 
-	<input type="text" class="firstname"  placeholder="Порт" name="port" id="port"/> 
+ <h2>Настройки сервиса</h2>
+<form  class='mysubform' id="form" name="form" >
+	<input type="text" class="firstname" name="ip" placeholder="ip">
+	<input type="text"class="firstname" name="port" placeholder="port">
 <div class="line">
-<input type="SUBMIT" value="Включить">
+	<input type="submit" placeholder="Запустить">
 </div>
+
 <div class="line">
 
 <div class="statusblock">
 <?php
-if(isset($_GET['ip']) and ($_GET['ip'] == TRUE))
-{
-    	if(isset($_GET['port']) and ($_GET['port'] == TRUE))
-    {
-    	$ip = $_GET['ip'];
-    	$port = $_GET['port'];
-    	$ipCorrect = filter_var($ip, FILTER_VALIDATE_IP);
-    	if ($ipCorrect) {
-    		$command = $filename . ' ' . $ip . ':' . $port;
-        	system($command);	
-        }
-        else {
-        	echo "Неверный IP АДРЕС!";
-        }
-    }
-    else {
-        echo "Введите порт!";
-    }
-}
-
-?>
-</pre>
-</form>
-</div>
-</div>
-
-	<form method="post" class="mysubform">
-<input type="submit" name="killprocess" id="killprocess" value="Выключить сервис"/>
-</form>
 
 
-<hr>
 
-<?php
 function killprocess()
 {
     system("taskkill /f /im py.exe");	
@@ -124,13 +93,23 @@ function killprocess()
 if(array_key_exists('killprocess',$_POST)){
 	killprocess();
 }
+
 ?>
-		<div id="fh5co-footer">
-			<div class="row">
+</pre>
+</form>
+</div>
+</div>
+
+<div class="statusblock">
+	<form method="post" class="mysubform">
+<input type="submit" name="killprocess" id="killprocess" value="Выключить сервис"/>
+</form>
 
 
-			</div>
-		</div>
+<hr>
+
+
+		
 		
 	</div>
 	

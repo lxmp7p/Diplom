@@ -121,12 +121,6 @@ if(array_key_exists('filemanager',$_POST)){
 
 
 
-		<div id="fh5co-footer">
-			<div class="row">
-
-
-			</div>
-		</div>
 		
 	</div>
 	

@@ -387,3 +387,9 @@ ul#main-menu ul#submenu.hide-submenu {
 .statusblock {
   color: white;
 }
+
+ul#main-menu li a {
+display: inline-block;
+width: 500px;
+padding-right: 100%;
+}

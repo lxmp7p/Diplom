@@ -68,7 +68,7 @@ include "sessiontest.php";
  $filename = 'WebManagement\manage.py runserver' 
  ?>
  <hr>
- <h2>Доступ</h2>
+ <h3>Смена логина</h3>
  <div class="form_container">
 <form class='mysubform' method="POST"  name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
 <div input>
@@ -78,11 +78,11 @@ include "sessiontest.php";
 <input type="submit" value="Изменить" name="btn_login">
 </div>
 
-
+	<div class="statusblock">
 <?php
 ini_set('display_errors','On');
 error_reporting('E_ALL');
-	
+
 $link = mysqli_connect("localhost", "root", "", "reg");
 if (isset($_POST['btn_login'])){
     if (!empty($_POST['login'])){
@@ -95,8 +95,56 @@ if (isset($_POST['btn_login'])){
                 		if($user['login'] == $_POST['newLogin']) {
     						echo "Успешно!"; // Вроде ковычки забыли
                 		}
+                		else {
+                			echo "Ошибка!";
+                		}
 }
                 	#if ({$user['name']} == ; // Вроде ковычки забыли
+}
+                  $_SESSION['auth'] = "SESSIONTRUE";
+                } else echo "Неверный логин или пароль!";
+            } else echo "Пароль должен содержать 8-32 символов";
+        } else echo "Вы не ввели пароль";
+    }
+?>
+</form>
+</div>
+</div>
+ <hr>
+ <h3>Смена пароля</h3>
+ <div class="statusblock">
+ <div class="form_container">
+<form class='mysubform' method="POST"  name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
+<div input>
+<input type="text" class="firstname"  placeholder="Логин" name="login" id="login"/> 
+<input type="text" class="firstname"  placeholder="Пароль"  name="password" id="newLogin"/> 
+<input type="text" class="firstname"  placeholder="Новый пароль" name="newPassword" id="password"/> 
+<input type="submit" value="Изменить" name="btn_pass" size="	50px">
+</div>
+
+
+<?php
+ini_set('display_errors','On');
+error_reporting('E_ALL');
+	
+$link = mysqli_connect("localhost", "root", "", "reg");
+if (isset($_POST['btn_pass'])){
+    if (!empty($_POST['login'])){
+        if (!empty($_POST['password'])){
+            if (strlen($_POST['password']) >= 8 && strlen($_POST['password']) <= 32){
+            	$pass = htmlspecialchars(md5(md5(md5($_POST['password']))));
+            	$newPass = htmlspecialchars(md5(md5(md5($_POST['newPassword']))));
+                if (mysqli_query($link, "UPDATE user SET password = '".$newPass."' WHERE login = '".$_POST['login']."' and password = '".$pass."'") == 1)
+                {
+                	$test = mysqli_query($link, "SELECT * FROM user");
+                	while($user = mysqli_fetch_assoc($test)) {
+                		if($user['password'] == $newPass) {
+    						echo "Успешно!";
+                		}
+                		else {
+                			echo "Ошибка!";
+                		}
+}
 }
                   $_SESSION['auth'] = "SESSIONTRUE";
                 } else echo "Неверный логин или пароль!";
@@ -110,15 +158,10 @@ if (isset($_POST['btn_login'])){
 ?>
 </form>
 </div>
+</div>
 
 
 
-		<div id="fh5co-footer">
-			<div class="row">
-
-
-			</div>
-		</div>
 		
 	</div>
 	

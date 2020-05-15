@@ -70,12 +70,12 @@ include "sessiontest.php";
  $filename = 'WebManagement\manage.py runserver' 
  ?>
  <hr>
- <h2>Статус сервиса</h2>
+ <h2>Проверка сервиса</h2>
 <form  class='mysubform' method="GET"  name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
 	<input type="text" class="firstname"  placeholder="IP АДРЕС" name="ip" id="ip"/> 
 	<input type="text" class="firstname"  placeholder="Порт" name="port" id="port"/> 
 <div class="line">
-<input type="SUBMIT" value="Включить">
+<input type="SUBMIT" value="Проверить статус">
 </div>
 <div class="line">
 
@@ -85,52 +85,43 @@ if(isset($_GET['ip']) and ($_GET['ip'] == TRUE))
 {
     	if(isset($_GET['port']) and ($_GET['port'] == TRUE))
     {
-    	$ip = $_GET['ip'];
+    	$server = $_GET['ip'];
     	$port = $_GET['port'];
-    	$ipCorrect = filter_var($ip, FILTER_VALIDATE_IP);
-    	if ($ipCorrect) {
-    		$command = $filename . ' ' . $ip . ':' . $port;
-        	system($command);	
-        }
-        else {
-        	echo "Неверный IP АДРЕС!";
-        }
-    }
-    else {
-        echo "Введите порт!";
-    }
+    	$status = 'unavailable';
+		$timeout = 10;
+ 		$fp = @fsockopen ($server, $port, $errno, $errstr, $timeout);
+ 		if ($fp) {
+  $status = 'alive, not responding';
+  @fwrite ($fp, "HEAD / HTTP/1.0\r\nHost: $server:$port\r\n\r\n");
+  if (strlen(@fread($fp,1024))>0) $status = 'alive, responding';
+  fclose ($fp);
+
+ }
+ if ($status == 'alive, responding') {
+ 		echo "Сервер включен!"; 
+ 	}
+ else {
+ 	echo "Сервер выключен!"; 
+ }
+}
 }
 
 ?>
+
+
+
+
+
 </pre>
 </form>
 </div>
 </div>
 
-	<form method="post" class="mysubform">
-<input type="submit" name="killprocess" id="killprocess" value="Выключить сервис"/>
-</form>
 
 
 <hr>
 
-<?php
-function killprocess()
-{
-    system("taskkill /f /im py.exe");	
-    system("taskkill /f /im python.exe");
-    echo "Успешно!";
-}
-if(array_key_exists('killprocess',$_POST)){
-	killprocess();
-}
-?>
-		<div id="fh5co-footer">
-			<div class="row">
 
-
-			</div>
-		</div>
 		
 	</div>
 	
