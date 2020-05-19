@@ -68,7 +68,9 @@ if (isset($_POST['btn_login'])){
     if (!empty($_POST['login'])){
         if (!empty($_POST['password'])){
             if (strlen($_POST['password']) >= 8 && strlen($_POST['password']) <= 32){
-                if (mysqli_num_rows(mysqli_query($link, "SELECT `login` FROM `user` WHERE `login` = '".$_POST['login']."' and `password` = '".htmlspecialchars(md5(md5(md5($_POST['password']))))."'")) == 1){
+                $login = addslashes($_POST['login']);
+                $password = addslashes($_POST['password']);
+                if (mysqli_num_rows(mysqli_query($link, "SELECT `login` FROM `user` WHERE `login` = '".$login."' and `password` = '".htmlspecialchars(md5(md5(md5($password)))). "'" )) == 1){
                   $_SESSION['auth'] = "SESSIONTRUE";
                    header('Location: /index.php');
                 } else echo "Неверный логин или пароль!";
